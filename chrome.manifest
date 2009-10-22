@@ -1,0 +1,2 @@
+content livetophatenar content/
+overlay chrome://browser/content/browser.xul chrome://livetophatenar/content/livetophatenar.xul
