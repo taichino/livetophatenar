@@ -3,7 +3,7 @@ var TopHatenar = {
 	baseurl   : "http://tophatenar.com/view/",
 	imagepath : "chrome://livetophatenar/content/img/",
 	lasturl   : null,
-	
+
 	setScore: function() {
 		var self = this;
 		var cur = window._content.document.location;
@@ -16,18 +16,26 @@ var TopHatenar = {
 		req.open("GET", url);
 		req.onload = function(evt) {
 			if (req.status == 200 && req.responseText.length > 0) {
-				data = self.parseText(req.responseText);
-				self.update(data);
+				data = self._parseText(req.responseText);
+				self._update(data);
 			}
 		};
 		req.send(null);
 	},
 
-	update: function(data) {
+	goSrc: function() {
+        var windowManager = (Components.classes["@mozilla.org/appshell/window-mediator;1"]).getService();
+		var windowManagerInterface = windowManager.QueryInterface(Components.interfaces.nsIWindowMediator);
+		var browser = (windowManagerInterface.getMostRecentWindow("navigator:browser")).getBrowser();
+		var url = this.baseurl + window._content.document.location;
+		browser.addTab(url);
+	},
+	
+	_update: function(data) {
 		var base  = this.imagepath;
 		if (data.bookmarks) {
-			var rRank = this.getRank(data.subscribers);			
-			var bRank = this.getRank(data.bookmarks);
+			var rRank = this._getRank(data.subscribers);			
+			var bRank = this._getRank(data.bookmarks);
 			document.getElementById('subscribers-image').src = base + rRank + ".png";
 			document.getElementById('bookmarks-image').src   = base + bRank + ".png";
 
@@ -42,12 +50,12 @@ var TopHatenar = {
 		}
 	},
 
-	getRank: function(num) {
+	_getRank: function(num) {
 		var value = Math.floor(Math.LOG10E * Math.log(num) * 2);
 		return value > 10 ? 10 : value;
 	},
 
-	parseText: function(text) {
+	_parseText: function(text) {
 		var result = {};
 		var lines = text.split(/\n/);
 		var bookmarkFlag = false;

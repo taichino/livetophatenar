@@ -8,6 +8,7 @@
 	   class="statusbarpanel-menu" 
 	   label="live tophatenar panel"
 	   tooltiptext="LiveTopHatenar"
+	   onmousedown='TopHatenar.goSrc()'
 	  >
 	  <vbox>
 		<image id="subscribers-image" src="chrome://livetophatenar/content/img/na.png" />
