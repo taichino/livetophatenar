@@ -41,7 +41,7 @@ var TopHatenar = {
 
 			var rText = "購読者数: " + data.subscribers + " [" + data.subscribers_rank + "位]";
 			var bText = "ブクマ数: " + data.bookmarks   + " [" + data.bookmarks_rank   + "位]";
-			document.getElementById("livetophatenar-panel").setAttribute("tooltiptext", rText + "\n" + bText);
+			document.getElementById("livetophatenar-panel").setAttribute("tooltiptext", "TopHatenar\n" + rText + "\n" + bText);
 		}
 		else {
 			document.getElementById('subscribers-image').src = base + "na.png";

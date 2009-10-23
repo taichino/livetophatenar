@@ -9,6 +9,7 @@
 	   label="live tophatenar panel"
 	   tooltiptext="LiveTopHatenar"
 	   onmousedown='TopHatenar.goSrc()'
+	   onmouseover="this.style.cursor='pointer';"
 	  >
 	  <vbox>
 		<image id="subscribers-image" src="chrome://livetophatenar/content/img/na.png" />
