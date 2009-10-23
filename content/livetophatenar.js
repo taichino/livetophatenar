@@ -1,9 +1,13 @@
 // main class
-function TopHatenar() {
-	this.setScore = function() {
+var TopHatenar = {
+	baseurl   : "http://tophatenar.com/view/",
+	imagepath : "chrome://livetophatenar/content/img/",
+	lasturl   : null,
+	
+	setScore: function() {
 		var self = this;
 		var cur = window._content.document.location;
-		var url = "http://tophatenar.com/view/" + cur;
+		var url = this.baseurl + cur;
 		if (this.lasturl == url) {
 			return;
 		}
@@ -17,10 +21,10 @@ function TopHatenar() {
 			}
 		};
 		req.send(null);
-	};
+	},
 
-	this.update = function(data) {
-		var base  = "chrome://livetophatenar/content/img/";
+	update: function(data) {
+		var base  = this.imagepath;
 		if (data.bookmarks) {
 			var rRank = this.getRank(data.subscribers);			
 			var bRank = this.getRank(data.bookmarks);
@@ -29,21 +33,21 @@ function TopHatenar() {
 
 			var rText = "購読者数: " + data.subscribers + " [" + data.subscribers_rank + "位]";
 			var bText = "ブクマ数: " + data.bookmarks   + " [" + data.bookmarks_rank   + "位]";
-			document.getElementById("my-panel").setAttribute("tooltiptext", rText + "\n" + bText);
+			document.getElementById("livetophatenar-panel").setAttribute("tooltiptext", rText + "\n" + bText);
 		}
 		else {
 			document.getElementById('subscribers-image').src = base + "na.png";
 			document.getElementById('bookmarks-image').src   = base + "na.png";
-			document.getElementById("my-panel").setAttribute("tooltiptext", "現在のページは評価できません");
+			document.getElementById("livetophatenar-panel").setAttribute("tooltiptext", "現在のページは評価できません");
 		}
-	};
+	},
 
-	this.getRank = function(num) {
+	getRank: function(num) {
 		var value = Math.floor(Math.LOG10E * Math.log(num) * 2);
 		return value > 10 ? 10 : value;
-	};
+	},
 
-	this.parseText = function(text) {
+	parseText: function(text) {
 		var result = {};
 		var lines = text.split(/\n/);
 		var bookmarkFlag = false;
@@ -69,11 +73,10 @@ function TopHatenar() {
 			}
 		}
 		return result;
-	};
-}
+	}
+};
 
 // entry point
-var tophatenar = new TopHatenar();
 window.addEventListener("focus", function() {
-	tophatenar.setScore();
+	TopHatenar.setScore();
 }, true);

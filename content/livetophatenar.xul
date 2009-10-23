@@ -4,7 +4,7 @@
 		  src="chrome://livetophatenar/content/livetophatenar.js" />
   <statusbar id="status-bar">
 	<statusbarpanel
-	   id="my-panel"
+	   id="livetophatenar-panel"
 	   class="statusbarpanel-menu" 
 	   label="live tophatenar panel"
 	   tooltiptext="LiveTopHatenar"
