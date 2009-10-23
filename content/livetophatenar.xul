@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-stylesheet
+      href="chrome://livetophatenar/content/livetophatenar.css" type="text/css"?>
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript"
+		  src="chrome://livetophatenar/content/livetophatenar.js" />
+  <statusbar id="status-bar">
+	<statusbarpanel
+	   id="my-panel"
+	   class="statusbarpanel-menu" 
+	   label="live tophatenar panel"
+	   tooltiptext="LiveTopHatenar" >
+	  <vbox>
+		<image id="subscribers-image" src="chrome://livetophatenar/content/img/na.png" />
+		<image id="bookmarks-image"   src="chrome://livetophatenar/content/img/na.png" />
+	  </vbox>
+	</statusbarpanel>
+  </statusbar>
+</overlay>
