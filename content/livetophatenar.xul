@@ -8,9 +8,11 @@
 	   class="statusbarpanel-menu" 
 	   label="live tophatenar panel"
 	   tooltiptext="LiveTopHatenar"
-	   onmousedown='TopHatenar.goSrc()'
+	   onclick='TopHatenar.goSrc()'
 	   onmouseover="this.style.cursor='pointer';"
 	  >
+	  <image id="tophatenar-logo" src="chrome://livetophatenar/content/img/logo.png" />
+	  <vbox width="1px"/>
 	  <vbox>
 		<image id="subscribers-image" src="chrome://livetophatenar/content/img/na.png" />
 		<image id="bookmarks-image"   src="chrome://livetophatenar/content/img/na.png" />
