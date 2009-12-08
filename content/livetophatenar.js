@@ -1,13 +1,14 @@
 // main class
 var TopHatenar = {
+	host      : "http://tophatenar.com",
 	baseurl   : "http://tophatenar.com/view/",
 	imagepath : "chrome://livetophatenar/content/img/",
 	lasturl   : null,
 
-	setScore: function() {
+	setScore: function(url) {
 		var self = this;
 		var cur = window._content.document.location;
-		var url = this.baseurl + cur;
+		var url = url || (this.baseurl + cur);
 		if (this.lasturl == url) {
 			return;
 		}
@@ -17,7 +18,14 @@ var TopHatenar = {
 		req.onload = function(evt) {
 			if (req.status == 200 && req.responseText.length > 0) {
 				data = self._parseText(req.responseText);
-				self._update(data);
+				if (data["candidate"]) {
+					self.setScore(self.host + data["candidate"]);
+				}
+				else {
+					Application.console.log(data["bookmarks"]);
+					Application.console.log(data["subscribers"]);
+					self._update(data);
+				}
 			}
 		};
 		req.send(null);
@@ -34,8 +42,10 @@ var TopHatenar = {
 	_update: function(data) {
 		var base  = this.imagepath;
 		if (data.bookmarks) {
-			var rRank = this._getRank(data.subscribers);			
+			var rRank = this._getRank(data.subscribers);
 			var bRank = this._getRank(data.bookmarks);
+			Application.console.log(rRank);
+			Application.console.log(bRank);
 			document.getElementById('subscribers-image').src = base + rRank + ".png";
 			document.getElementById('bookmarks-image').src   = base + bRank + ".png";
 
@@ -51,6 +61,7 @@ var TopHatenar = {
 	},
 
 	_getRank: function(num) {
+		if (num == 0) return 0;
 		var value = Math.floor(Math.LOG10E * Math.log(num) * 2);
 		return value > 10 ? 10 : value;
 	},
@@ -62,7 +73,13 @@ var TopHatenar = {
 		for (var i = 0; i < lines.length; i++) {
 			var line = lines[i];
 			line = line.replace(/(^\s*)|(\s*$)/g, "");  // trim
-			if (line.substring(0, 4) == "購読者:") {
+			if (line.substring(0, 22) == "以下の候補の中からURLを選択してください。") {
+				//Application.console.log("another candidate");
+				result["candidate"] = lines[i + 6].match(/<a href=\"(.+)?\">.+/)[1];
+				//Application.console.log(result[1]);
+				return result;
+			}
+			else if (line.substring(0, 4) == "購読者:") {
 				result["subscribers"] = line.match(/購読者:\s*(\d+)\s*/)[1];
 			}
 			else if (line == "ブックマーク:") {
