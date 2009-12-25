@@ -3,14 +3,16 @@
   <script type="application/x-javascript"
 		  src="chrome://livetophatenar/content/livetophatenar.js" />
   <statusbar id="status-bar">
+	<!-- メインのUI -->	
 	<statusbarpanel
 	   id="livetophatenar-panel"
-	   class="statusbarpanel-menu" 
+	   class="statusbarpanel-iconic" 
 	   label="live tophatenar panel"
 	   tooltiptext="LiveTopHatenar"
-	   onclick='TopHatenar.goSrc()'
+	   oncommand='TopHatenar.goSrc()'
 	   onmouseover="this.style.cursor='pointer';"
-	  >
+	   context="livetophatenar-main-menu" >
+
 	  <image id="tophatenar-logo" src="chrome://livetophatenar/content/img/logo.png" />
 	  <vbox width="1px"/>
 	  <vbox>
@@ -18,5 +20,19 @@
 		<image id="bookmarks-image"   src="chrome://livetophatenar/content/img/na.png" />
 	  </vbox>
 	</statusbarpanel>
+
+	<!-- コンテキストメニュー -->
+	<commandset id="livetophatenar-commandset">
+	  <command id="livetophatenar-command-toggle" 
+			   oncommand="TopHatenar.toggle();" />
+	</commandset>
+	<popupset>
+	  <popup id="livetophatenar-main-menu"
+			 position="before_start" >
+        <menuitem id="livetophatenar-context-toggle"
+                  label="Disable LiveTophatenar"
+                  command="livetophatenar-command-toggle"/>
+	  </popup>
+	</popupset>
   </statusbar>
 </overlay>

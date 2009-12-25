@@ -1,0 +1,58 @@
+<?xml version="1.0"?>  
+  
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+
+
+<prefwindow
+   id="livetophatenar.pref"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   title="LiveTopHatenar Options"
+   onload="init();"
+   bottons="accept,cancel"
+   autostretch="always">
+  
+  <script type="application/x-javascript"
+		  src="chrome://livetophatenar/content/livetophatenar.js"/>
+  <script>
+    var prefs = null;
+	
+	function init() {
+		prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch);
+		var node = document.getElementById("extentions.livetophatenar.enabled");
+		try {
+			loadCheck(node);
+		}
+		catch (e) {
+			// 初期値はON
+			prefs.setBoolPref(node.id, true);
+			node.checked = true;
+		}
+	}
+    function loadCheck(node)  {
+		node.checked = prefs.getBoolPref(node.id);
+	}
+    function applyCheck(node) {
+		prefs.setBoolPref(node.id, node.checked);
+		setScore();
+	}
+	
+  </script>
+  
+  <prefpane>
+	<!-- 設定項目 -->
+	<groupbox>
+	  <caption label="Options"/>
+	  <checkbox label="Enable Check Score" id="extentions.livetophatenar.enabled" oncommand="applyCheck(this);"/>
+	</groupbox>
+
+	<separator class="thin"/>
+
+	<!-- About this addon -->
+	<groupbox>
+      <caption label="About LiveTophatenar"/>
+	  <text value="Live TopHatenar is an addon" />
+	  <text value="to display the score of TopHatenar."/>
+	</groupbox>
+  </prefpane>
+  
+</prefwindow>
