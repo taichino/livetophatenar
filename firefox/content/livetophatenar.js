@@ -150,4 +150,3 @@ var TopHatenar = {
 window.addEventListener("focus", function() {
 	TopHatenar.setScore();
 }, true);
-
