@@ -1,11 +1,11 @@
 {
-  "name": "My First Extension",
-  "version": "1.0",
+  "name": "LiveTopHatenar",
+  "version": "0.1",
   "icons" : {
     "48" : "icon48.png",
     "128": "icon128.png"
   },
-  "description": "The first extension that I made.",
+  "description": "LiveTopHatenar provides TopHatenar's score of current page",
   "browser_action": {
     "default_icon": "icon.png",
     "popup"       : "popup.html"
