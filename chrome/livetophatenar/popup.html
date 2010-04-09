@@ -1,0 +1,115 @@
+<style>
+body {
+  min-width:200px;
+  overflow-x:hidden;
+  font-size: 10pt;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+tr {
+  border-bottom: 1px;
+}
+td.score, td.rank {
+  font-weight: bold;
+}
+</style>
+<script>
+var TopHatenar = {
+	host      : "http://tophatenar.com",
+	baseurl   : "http://tophatenar.com/view/",
+
+ 	setScore: function(url) {
+		var self = this;
+		chrome.tabs.getSelected(null, function(tab) {		
+			var cur = tab.url;
+			var url = url || (self.baseurl + cur);
+			var req = new XMLHttpRequest();
+			req.open("GET", url);
+			req.onload = function(evt) {
+				if (req.status == 200 && req.responseText.length > 0) {
+					data = self._parseText(req.responseText);
+					if (data["candidate"]) {
+						self.setScore(self.host + data["candidate"]);
+					}
+					else {
+						self._update(data);
+					}
+				}
+			};
+			req.onerror = function(evt) {
+				document.body.innerHTML = "ネットワークエラーです";
+			}
+			req.send(null);
+ 		});
+ 	},
+
+	_update: function(data) {
+		if (data.bookmarks) {
+			var rText     = data.subscribers;
+			var rRankText = "（" + data.subscribers_rank + "位）";
+			var bText     = data.bookmarks;
+			var bRankText = "（" + data.bookmarks_rank + "位" + "）";
+			document.getElementById('subscriber').innerHTML = rText + "人";
+			document.getElementById('subscriber_rank').innerHTML = rRankText;
+			document.getElementById('bookmark').innerHTML = bText + "個";
+			document.getElementById('bookmark_rank').innerHTML = bRankText;
+		}
+		else {
+			document.body.innerHTML = "現在のページを評価できません";
+		}
+	},
+
+ 	_parseText: function(text) {
+		var result = {};
+		var lines = text.split(/\n/);
+		var bookmarkFlag = false;
+		for (var i = 0; i < lines.length; i++) {
+			var line = lines[i];
+			line = line.replace(/(^\s*)|(\s*$)/g, "");  // trim
+			if (line.substring(0, 22) == "以下の候補の中からURLを選択してください。") {
+				result["candidate"] = lines[i + 6].match(/<a href=\"(.+)?\">.+/)[1];
+				return result;
+			}
+			else if (line.substring(0, 4) == "購読者:") {
+				result["subscribers"] = line.match(/購読者:\s*(\d+)\s*/)[1];
+			}
+			else if (line == "ブックマーク:") {
+				result["bookmarks"] = lines[i + 1].match(/<a [^>]+>\s*(\d+)\s*<img/)[1];
+				bookmarkFlag = true;
+			}
+			else if (line.substring(0, 3) == "全体で") {
+				var rank = lines[i + 1].match(/<b [^>]+>(\d+)</)[1];
+				if (bookmarkFlag) {
+					result["bookmarks_rank"] = rank;
+				}
+				else {
+					result["subscribers_rank"] = rank;
+					result["total"] = lines[i + 3].match(/<b>(\d+)</)[1];
+				}
+			}
+		}
+		return result;
+ 	}
+};
+TopHatenar.setScore();
+</script>
+<div id="content">
+  TopHatenarのスコア
+  <table>
+	<tr>
+	  <td class="head">購読者数</td>
+	  <td class="score" id="subscriber" align="right"></td>
+	  <td class="rank"  id="subscriber_rank" align="right"></td>
+	</tr>
+  </table>
+  <hr />
+  <table>
+	<tr>
+	  <td class="head">ブクマ数</td>
+	  <td class="score" id="bookmark" align="right"></td>
+	  <td class="rank" id="bookmark_rank" align="right"></td>
+	</tr>
+  </table>
+</div>
